@@ -32,17 +32,57 @@ class Spyton
     @@variables = {}
     @diceParser = Parser.new("dice roller") do
       token(/\s+/)
+      token(/if/) {|m| m}
+      token(/==/) {|m| m}
+      token(/<=/) {|m| m}
+      token(/>=/) {|m| m}
+      token(/!=/) {|m| m}
       token(/\d+/) {|m| m.to_i }
       token(/./) {|m| m }
       
-      start :assign do
-        match(String, '=', :expr) {|a,_,b| @@variables[a] = b }
+      # start :program do
+      #   match(:block)
+      # end
+
+      start :block do
+        match(:condition, :statement ) {|a, b| puts a}
+        match(:statement) #{ }CONDITION
+      end
+
+      rule :condition do
+        match('if', '(', :bool, ')')
+        # match('while', :bool)
+        # match('for', :bool)
+      end
+      
+      rule :statement do
+        match(:assign)
         match(:expr)
       end
+
+      rule :assign do
+        match(String, '=', :expr) {|a,_,b| @@variables[a] = b }
+        match(String, '=', :bool) {|a,_,b| @@variables[a] = b }
+        match(:expr)
+        match(:bool)
+      end
+      
+      rule :bool do
+        match(:expr, '==', :term) {|a, _, b| a == b}
+        match(:expr, '>', :term) {|a, _, b| a > b}
+        match(:expr, '>=', :term) {|a, _, b| a >= b}
+        match(:expr, '<', :term) {|a, _, b| a < b}
+        match(:expr, '<=', :term) {|a, _, b| a <= b}
+        match(:expr, '!=', :term) {|a, _, b| a != b}
+
+        match(:term)
+      end
+
 
       rule :expr do 
         match(:expr, '+', :term) {|a, _, b| a + b }
         match(:expr, '-', :term) {|a, _, b| a - b }
+
         match(:term)
       end
       
