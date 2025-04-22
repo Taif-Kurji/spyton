@@ -45,7 +45,7 @@ class Spyton
       # end
 
       start :block do
-        match(:condition, :statement ) {|a, b| puts a}
+        match(:condition, :statement ) {|a, b| if a == true then b end}
         match(:statement) #{ }CONDITION
       end
 
