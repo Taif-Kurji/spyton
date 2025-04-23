@@ -32,6 +32,7 @@ class Spyton
     @@variables = {}
     @diceParser = Parser.new("dice roller") do
       token(/\s+/)
+      token(/[a-zA-Z]+/) {|m| m}
       token(/if/) {|m| m}
       token(/==/) {|m| m}
       token(/<=/) {|m| m}
@@ -58,6 +59,11 @@ class Spyton
       rule :statement do
         match(:assign)
         match(:expr)
+        match(:print)
+      end
+
+      rule :print do
+        match('print', '(', :expr, ')') {|_,_,a,_| puts a} #WEIRD
       end
 
       rule :assign do
