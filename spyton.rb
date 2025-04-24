@@ -47,13 +47,13 @@ class Spyton
       # end
 
       start :block do
-        match(:condition, '{', :statement, '}' ) {|a, _, b, _| if a == true then b end} 
-        match(:statement) #LÄGG TILL PARANTESER SOM UTFÖRS FÖRE ANNAT.
+        match(:condition, '{', :statement, '}' ) {|a, _, b, _| BlockNode.new(a, b)} 
+        match(:statement) {|a| StatementNode.new(a)} #LÄGG TILL PARANTESER SOM UTFÖRS FÖRE ANNAT.
       end
 
       rule :condition do
-        match('if', '(', :bool, ')') {|_, _, a, _| a}
-        #match('while', '(', :bool, ')') {|_, _, a, _| a} #FIXA DETTA
+        match('if', '(', :bool, ')') {|_, _, a, _| ConditionNode.new(a)}
+        #match('while', '(', :bool, ')') {|_, _, a, _| a} #FIXA DETTA (adda boolen till nuvarande scopes conditions.)
         # match('for', :bool)
       end
       
@@ -111,7 +111,10 @@ class Spyton
         match('(', :expr, ')') {|_, a, _| ExpressionNode.new(a)}
         match(Integer) {|a| IntegerNode.new(a)}
 
+        
         match(String) {|a| @@variables[a]} #FIXA DETTA implementera scopes
+        match('"', String, '"') {|_, a, _,| StringNode.new.(a)}
+        
 
 
       end
