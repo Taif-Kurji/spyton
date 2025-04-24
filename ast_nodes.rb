@@ -39,7 +39,14 @@ end
 
 
 
-class StringNode 
+class StringNode #gör denna
+    def intialize(a)
+        @value = a
+    end
+
+    def run()
+        @value
+    end
 end
 
 
@@ -54,6 +61,7 @@ class SubtractionNode
     end
 end
 
+
 class MultiplicationNode
     def initialize(a, b)
         @lhs = a 
@@ -64,6 +72,7 @@ class MultiplicationNode
         @lhs.run * @rhs.run
     end
 end
+
 
 class DivisionNode
     def initialize(a, b)
@@ -76,6 +85,7 @@ class DivisionNode
     end
 end
 
+
 class ModuloNode
     def initialize(a, b)
         @lhs = a 
@@ -86,6 +96,7 @@ class ModuloNode
         @lhs.run % @rhs.run
     end
 end
+
 
 class PowerNode
     def initialize(a, b)
@@ -98,6 +109,7 @@ class PowerNode
     end
 end
 
+
 class EqualsNode
     def initialize(a, b)
         @lhs = a 
@@ -108,6 +120,7 @@ class EqualsNode
         @lhs.run == @rhs.run
     end
 end
+
 
 class MoreEqualsNode
     def initialize(a, b)
@@ -120,6 +133,7 @@ class MoreEqualsNode
     end
 end
 
+
 class LessEqualsNode
     def initialize(a, b)
         @lhs = a 
@@ -130,6 +144,7 @@ class LessEqualsNode
         @lhs.run <= @rhs.run
     end
 end
+
 
 class MoreNode
     def initialize(a, b)
@@ -142,6 +157,7 @@ class MoreNode
     end
 end
 
+
 class LessNode
     def initialize(a, b)
         @lhs = a 
@@ -153,6 +169,7 @@ class LessNode
     end
 end
 
+
 class NotEqualsNode
     def initialize(a, b)
         @lhs = a 
@@ -163,3 +180,15 @@ class NotEqualsNode
         @lhs.run != @rhs.run
     end
 end
+
+
+class PrintNode
+    def initialize(a)
+        @print_expr = a
+    end
+
+    def run()
+        puts @print_expr.run
+    end
+end
+        

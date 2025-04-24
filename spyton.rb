@@ -17,9 +17,9 @@ require './ast_nodes.rb'
 
 
 ##############################################################################
-#
-# This part defines the Spyton language
-#
+#                                                                            #
+# This part defines the Spyton language                                      # 
+#                                                                            #   
 ##############################################################################
 
 class Spyton
@@ -53,7 +53,7 @@ class Spyton
 
       rule :condition do
         match('if', '(', :bool, ')') {|_, _, a, _| a}
-        match('while', '(', :bool, ')') {|_, _, a, _| a} #FIXA DETTA
+        #match('while', '(', :bool, ')') {|_, _, a, _| a} #FIXA DETTA
         # match('for', :bool)
       end
       
@@ -65,11 +65,11 @@ class Spyton
       end
 
       rule :print do
-        match('print', '(', :expr, ')') {|_, _, a, _| puts(a) } #WEIRD
+        match('print', '(', :expr, ')') {|_, _, a, _| PrintNode.new(a) } #WEIRD
       end
 
       rule :assign do
-        match(String, '=', :expr) {|a,_,b| @@variables[a] = b }
+        match(String, '=', :expr) {|a,_,b| @@variables[a] = b } #NODE
         match(String, '=', :bool) {|a,_,b| @@variables[a] = b }  
       end
       
@@ -111,7 +111,7 @@ class Spyton
         match('(', :expr, ')') {|_, a, _| ExpressionNode.new(a)}
         match(Integer) {|a| IntegerNode.new(a)}
 
-        match(String) {|a| @@variables[a]}
+        match(String) {|a| @@variables[a]} #FIXA DETTA implementera scopes
 
 
       end
