@@ -17,7 +17,7 @@ require './ruleclass.rb'
 
 ##############################################################################
 #
-# This part defines the dice language
+# This part defines the Spyton language
 #
 ##############################################################################
 
@@ -46,13 +46,13 @@ class Spyton
       # end
 
       start :block do
-        match(:condition, :statement ) {|a, b| if a == true then b end}
-        match(:statement) #{ }CONDITION
+        match(:condition, '{', :statement, '}' ) {|a, _, b, _| if a == true then b end} 
+        match(:statement) #LÄGG TILL PARANTESER SOM UTFÖRS FÖRE ANNAT.
       end
 
       rule :condition do
-        match('if', '(', :bool, ')')
-        # match('while', :bool)
+        match('if', '(', :bool, ')') {|_, _, a, _| a}
+        match('while', '(', :bool, ')') {|_, _, a, _| a} #FIXA DETTA
         # match('for', :bool)
       end
       
@@ -63,7 +63,7 @@ class Spyton
       end
 
       rule :print do
-        match('print', '(', :expr, ')') {|_,_,a,_| puts a} #WEIRD
+        match('print', '(', :expr, ')') {|_, _, a, _| puts(a)} #WEIRD
       end
 
       rule :assign do
@@ -86,7 +86,7 @@ class Spyton
 
 
       rule :expr do 
-        match(:expr, '+', :term) {|a, _, b| a + b }
+        match(:expr, '+', :term) {|a, _, b| a + b } #STÄMMER DETTA???
         match(:expr, '-', :term) {|a, _, b| a - b }
 
         match(:term)
