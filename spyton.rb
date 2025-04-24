@@ -12,6 +12,7 @@
 require 'logger'
 require './parseclass.rb'
 require './ruleclass.rb'
+require './ast_nodes.rb'
 
 
 
@@ -58,50 +59,48 @@ class Spyton
       
       rule :statement do
         match(:assign)
+        match(:bool)
         match(:expr)
         match(:print)
       end
 
       rule :print do
-        match('print', '(', :expr, ')') {|_, _, a, _| puts(a)} #WEIRD
+        match('print', '(', :expr, ')') {|_, _, a, _| puts(a) } #WEIRD
       end
 
       rule :assign do
         match(String, '=', :expr) {|a,_,b| @@variables[a] = b }
-        match(String, '=', :bool) {|a,_,b| @@variables[a] = b }
-        match(:expr)
-        match(:bool)
+        match(String, '=', :bool) {|a,_,b| @@variables[a] = b }  
       end
       
       rule :bool do
-        match(:expr, '==', :term) {|a, _, b| a == b}
-        match(:expr, '>', :term) {|a, _, b| a > b}
-        match(:expr, '>=', :term) {|a, _, b| a >= b}
-        match(:expr, '<', :term) {|a, _, b| a < b}
-        match(:expr, '<=', :term) {|a, _, b| a <= b}
-        match(:expr, '!=', :term) {|a, _, b| a != b}
+        match(:expr, '==', :term) {|a, _, b| EqualsNode.new(a, b) }
+        match(:expr, '>', :term) {|a, _, b| MoreNode.new(a, b) }
+        match(:expr, '>=', :term) {|a, _, b| MoreEqualsNode.new(a, b)}
+        match(:expr, '<', :term) {|a, _, b| LessNode.new(a, b)}
+        match(:expr, '<=', :term) {|a, _, b| LessEqualsNode.new(a, b)}
+        match(:expr, '!=', :term) {|a, _, b| NotEqualsNode.new(a, b)}
 
-        match(:term)
       end
 
 
       rule :expr do 
-        match(:expr, '+', :term) {|a, _, b| a + b } #STÄMMER DETTA???
-        match(:expr, '-', :term) {|a, _, b| a - b }
+        match(:expr, '+', :term) {|a, _, b| AdditionNode.new(a, b) } #STÄMMER DETTA???
+        match(:expr, '-', :term) {|a, _, b| SubtractionNode.new(a, b) }
 
         match(:term)
       end
       
       rule :term do 
-        match(:term, '*', :next) {|a, _, b| a * b }
-        match(:term, '/', :next) {|a, _, b| a / b }
-        match(:term, '%', :next) {|a, _, b| a % b }
+        match(:term, '*', :next) {|a, _, b| MultiplicationNode.new(a, b) }
+        match(:term, '/', :next) {|a, _, b| DivisionNode.new(a, b) }
+        match(:term, '%', :next) {|a, _, b| ModuloNode.new(a, b) }
         
         match(:next)
       end
       
       rule :next do
-        match(:next, '^', :atom) {|a, _, b| a ** b }
+        match(:next, '^', :atom) {|a, _, b| PowerNode.new(a, b) }
         match(:atom)
       end
 
@@ -109,9 +108,9 @@ class Spyton
       rule :atom do
         # Match the result of evaluating an integer expression, which
         # should be an Integer
-        match(Integer)
+        match('(', :expr, ')') {|_, a, _| ExpressionNode.new(a)}
+        match(Integer) {|a| IntegerNode.new(a)}
 
-        match('(', :expr, ')') {|_, a, _| a }
         match(String) {|a| @@variables[a]}
 
 
@@ -129,7 +128,8 @@ class Spyton
     if done(str) then
       puts "Bye."
     else
-      puts "=> #{@diceParser.parse str}"
+      root_node = @diceParser.parse str
+      puts "=> #{root_node.run}"
       program
     end
   end
