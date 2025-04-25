@@ -113,7 +113,7 @@ class Spyton
 
         
         match(String) {|a| @@variables[a]} #FIXA DETTA implementera scopes
-        match('"', String, '"') {|_, a, _,| StringNode.new.(a)}
+        match(String) {|a| StringNode.new.(a)}
         
 
 

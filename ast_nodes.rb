@@ -40,7 +40,7 @@ end
 
 
 class StringNode #gör denna
-    def intialize(a)
+    def initialize(a)
         @value = a
     end
 
@@ -193,6 +193,7 @@ class PrintNode
         value #WEIRD maybe (puts)?
     end
 end
+
         
 class ConditionNode                   ##Man kanske borde göra om detta till en specifik if-node.  
     def initialize(a)                 ##Då hade man kunnat göra en specifik while-node som man hade använt type-of på för att vad den ska göra.
@@ -203,6 +204,7 @@ class ConditionNode                   ##Man kanske borde göra om detta till en 
         @condition.run
     end
 end
+
 
 class BlockNode
     def initialize(a, b)
@@ -217,6 +219,7 @@ class BlockNode
     end
 end
 
+
 class StatementNode
     def initialize(a)
         @statement = a
@@ -226,6 +229,7 @@ class StatementNode
         @statement.run
     end
 end
+
 
 #class AssignNode ##IMPLEMENTERA
 
