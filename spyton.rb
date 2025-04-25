@@ -28,6 +28,10 @@ class Spyton
   #   (1..times).inject(0) {|sum, _| sum + rand(sides) + 1 }
   # end
   
+  def parse(input)
+    @diceParser.parse(input)
+  end
+  
   def initialize
 
     @@variables = {}
