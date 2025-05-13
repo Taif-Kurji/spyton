@@ -188,9 +188,9 @@ class PrintNode
     end
 
     def run()
-        value = @print_expr.run
-        puts value
-        value #WEIRD maybe (puts)?
+        @value = @print_expr.run
+        puts @value
+        @value #WEIRD maybe (puts)?
     end
 end
 
@@ -230,13 +230,34 @@ class StatementNode
     end
 end
 
-
-#class AssignNode ##IMPLEMENTERA
-
-#class VariableNode ##implementera för att skilja på string och variabler.
-
-
+class FunctionNode
+    def initialize(a, b)
+        @variables = a
+        @statement = b
+        
+    end
     
+    def run()
+        puts("FUNCTION FOUND")
+    end
+end
+
+# class VariableNode
+#     def initialize(a, b)
+    
+
+
+
+# #class AssignNode ##IMPLEMENTERA
+
+# #class VariableNode ##implementera för att skilja på string och variabler.
+
+
+
+
+
+
+
 
 
         

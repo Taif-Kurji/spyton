@@ -28,17 +28,14 @@ class Spyton
   #   (1..times).inject(0) {|sum, _| sum + rand(sides) + 1 }
   # end
   
-  def parse(input)
-    @diceParser.parse(input)
-  end
-  
   def initialize
-
+    @@functions = {}
     @@variables = {}
     @diceParser = Parser.new("dice roller") do
       token(/\s+/)
       token(/[a-zA-Z]+/) {|m| m}
-      token(/if/) {|m| m}
+      token(/skriv/) {|m| m}
+      token(/om/) {|m| m}
       token(/==/) {|m| m}
       token(/<=/) {|m| m}
       token(/>=/) {|m| m}
@@ -56,25 +53,29 @@ class Spyton
       end
 
       rule :condition do
-        match('if', '(', :bool, ')') {|_, _, a, _| ConditionNode.new(a)}
+        match('om', '(', :bool, ')') {|_, _, a, _| ConditionNode.new(a)}
         #match('while', '(', :bool, ')') {|_, _, a, _| a} #FIXA DETTA (adda boolen till nuvarande scopes conditions.)
         # match('for', :bool)
       end
       
       rule :statement do
-        match(:assign)
         match(:bool)
         match(:expr)
         match(:print)
+        match(:assign)
       end
 
       rule :print do
-        match('print', '(', :expr, ')') {|_, _, a, _| PrintNode.new(a) } #WEIRD
+        match('skriv', '(', :expr, ')') {|_, _, a, _| PrintNode.new(a) } #WEIRD
       end
 
       rule :assign do
+        #match(String, '=', :expr) {|a,_,b| @@variables[a] = b } #NODE
+        #match(String, '=', :bool) {|a,_,b| @@variables[a] = b } ##TA BORT !!
         match(String, '=', :expr) {|a,_,b| @@variables[a] = b } #NODE
-        match(String, '=', :bool) {|a,_,b| @@variables[a] = b }  
+        match(String, '=', :bool) {|a,_,b| @@variables[a] = b } ##TA BORT !!
+
+        match('funktion', String, '(', String, ')', '{', :statement, '}') {|_, a, _, b, _, _, c, _| FunctionNode.new(b, c) }  
       end
       
       rule :bool do
@@ -117,7 +118,7 @@ class Spyton
 
         
         match(String) {|a| @@variables[a]} #FIXA DETTA implementera scopes
-        match(String) {|a| StringNode.new.(a)}
+        match('"', String, '"') {|_, a, _| StringNode.new.(a)} ## DETTA FUNGERAR INTE
         
 
 
@@ -129,7 +130,7 @@ class Spyton
     ["quit","exit","bye","done",""].include?(str.chomp)
   end
   
-  def program
+  def program 
     print "[Spyton] "
     str = gets
     if done(str) then
