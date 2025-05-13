@@ -1,13 +1,5 @@
 #!/usr/bin/env ruby
 
-# This file is called rdparse.rb because it implements a Recursive
-# Descent Parser. Read more about the theory on e.g.
-# http://en.wikipedia.org/wiki/Recursive_descent_parser
-
-# 2010-02-11 New version of this file for the 2010 instance of TDP007
-#   which handles false return values during parsing, and has an easy way
-#   of turning on and off debug messages.
-# 2014-02-16 New version that handles { false } blocks and :empty tokens.
 
 require 'logger'
 require './parseclass.rb'
@@ -154,20 +146,4 @@ end
 input = File.read("testrun.sp")
 Spyton.new.program
 
-
-
-
-# Examples of use
-
-# irb(main):1696:0> DiceRoller.new.roll
-# [diceroller] 1+3
-# => 4
-# [diceroller] 1+1d4
-# => 2
-# [diceroller] 1+1d4
-# => 3
-# [diceroller] (2+8*1d20)*3d6
-# => 306
-
-#DiceRoller.new.roll
 
