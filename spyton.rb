@@ -30,6 +30,7 @@ class Spyton
       token(/skriv/) {|m| m}
       token(/om/) {|m| m}
       token(/==/) {|m| m}
+      token(/=/) {|m| m}
       token(/<=/) {|m| m}
       token(/>=/) {|m| m}
       token(/!=/) {|m| m}
@@ -52,10 +53,10 @@ class Spyton
       end
       
       rule :statement do
+        match(:assign)
         match(:bool)
         match(:expr)
         match(:print)
-        match(:assign)
       end
 
       rule :print do
@@ -111,7 +112,7 @@ class Spyton
 
         
         match(String) {|a| VariableNode.new(a)}
-        match('"', String, '"') {|_, a, _| StringNode.new.(a)} ## DETTA FUNGERAR INTE
+        match('"', String, '"') {|_, a, _| StringNode.new(a)} ## DETTA FUNGERAR INTE
         
 
 
@@ -133,19 +134,6 @@ class Spyton
       puts "=> #{root_node.run(global_scope)}"
     end
   end
-
-  # def program
-  #   global_scope = Scope.new
-  #   print "[Spyton] "
-  #   str = gets
-  #   if done(str) then
-  #     puts "Bye."
-  #   else
-  #     root_node = @diceParser.parse str
-  #     puts "=> #{root_node.run}"
-  #     program
-  #   end
-  # end
 
 
 

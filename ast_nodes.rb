@@ -248,7 +248,8 @@ class VariableNode
     end
     
     def run(scope)
-        scope.get_var(@name)
+        puts("Tar '#{@name}'")
+        scope.get_var(@name.strip)
     end
 end
         
@@ -264,7 +265,8 @@ class AssignNode
 
     def run(scope)
         value = @expr.run(scope)
-        scope.set_var(@name, value)
+        puts("Sätter '#{@name}' = #{value}")
+        scope.set_var(@name.strip, value) #TAR BORT whitespace 
         value
     end
 end
