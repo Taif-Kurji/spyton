@@ -252,7 +252,43 @@ class VariableNode
         scope.get_var(@name.strip)
     end
 end
-        
+
+
+class FunctionNode
+    def initialize(a, b, c)
+        @name = a
+        @body = b
+        @args = c
+    end
+
+    def run(scope)
+        scope.set_func(@name, self)
+    end
+
+    def call(arg_values, calling_scope)
+        func_scope = Scope.new(calling_scope)
+    
+        @args.each_with_index do |arg_name, i|
+          func_scope.set_var(arg_name, arg_values[i])
+        end
+    
+        @body.run(func_scope)
+    end
+end
+
+
+class FunctionCallNode
+    def initialize(name, args)
+      @name = name
+      @args = args
+    end
+  
+    def run(scope)
+      func = scope.get_func(@name)
+      arg_values = @args.map { |arg| arg.run(scope) }
+      func.call(arg_values, scope)
+    end
+  end      
     
 
 

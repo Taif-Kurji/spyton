@@ -52,6 +52,7 @@ class Spyton
         # match('for', :bool)
       end
       
+      
       rule :statement do
         match(:assign)
         match(:bool)
