@@ -5,6 +5,7 @@ require 'logger'
 require './parseclass.rb'
 require './ruleclass.rb'
 require './ast_nodes.rb'
+require './scope_class.rb'
 
 
 
@@ -64,10 +65,10 @@ class Spyton
       rule :assign do
         #match(String, '=', :expr) {|a,_,b| @@variables[a] = b } #NODE
         #match(String, '=', :bool) {|a,_,b| @@variables[a] = b } ##TA BORT !!
-        match(String, '=', :expr) {|a,_,b| @@variables[a] = b } #NODE
-        match(String, '=', :bool) {|a,_,b| @@variables[a] = b } ##TA BORT !!
+        match(String, '=', :expr) {|a,_,b| AssignNode.new(a, b) } #NODE
+        match(String, '=', :bool) {|a,_,b| AssignNode.new(a, b) } ##TA BORT !!
 
-        match('funktion', String, '(', String, ')', '{', :statement, '}') {|_, a, _, b, _, _, c, _| FunctionNode.new(b, c) }  
+        # match('funktion', String, '(', String, ')', '{', :statement, '}') {|_, a, _, b, _, _, c, _| FunctionNode.new(b, c) }  
       end
       
       rule :bool do
@@ -109,7 +110,7 @@ class Spyton
         match(Integer) {|a| IntegerNode.new(a)}
 
         
-        match(String) {|a| @@variables[a]} #FIXA DETTA implementera scopes
+        match(String) {|a| VariableNode.new(a)}
         match('"', String, '"') {|_, a, _| StringNode.new.(a)} ## DETTA FUNGERAR INTE
         
 
@@ -122,17 +123,31 @@ class Spyton
     ["quit","exit","bye","done",""].include?(str.chomp)
   end
   
-  def program 
-    print "[Spyton] "
-    str = gets
-    if done(str) then
-      puts "Bye."
-    else
-      root_node = @diceParser.parse str
-      puts "=> #{root_node.run}"
-      program
+  def program
+    global_scope = Scope.new
+    loop do
+      print "[Spyton] "
+      str = gets
+      break if done(str)
+      root_node = @diceParser.parse(str)
+      puts "=> #{root_node.run(global_scope)}"
     end
   end
+
+  # def program
+  #   global_scope = Scope.new
+  #   print "[Spyton] "
+  #   str = gets
+  #   if done(str) then
+  #     puts "Bye."
+  #   else
+  #     root_node = @diceParser.parse str
+  #     puts "=> #{root_node.run}"
+  #     program
+  #   end
+  # end
+
+
 
   def log(state = true)
     if state

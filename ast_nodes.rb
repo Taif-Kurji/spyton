@@ -10,7 +10,7 @@ class IntegerNode
         @num = i 
     end
 
-    def run()
+    def run(scope)
         @num
     end
 end
@@ -22,8 +22,8 @@ class AdditionNode
         @rhs = b 
     end
 
-    def run()
-        @lhs.run + @rhs.run
+    def run(scope)
+        @lhs.run(scope) + @rhs.run(scope)
     end
 end
 
@@ -32,8 +32,8 @@ class ExpressionNode
         @next_node = nn
     end
 
-    def run()
-        @next_node.run
+    def run(scope)
+        @next_node.run(scope)
     end
 end
 
@@ -44,7 +44,7 @@ class StringNode #gör denna
         @value = a
     end
 
-    def run()
+    def run(scope)
         @value
     end
 end
@@ -56,8 +56,8 @@ class SubtractionNode
         @rhs = b 
     end
 
-    def run()
-        @lhs.run - @rhs.run
+    def run(scope)
+        @lhs.run(scope) - @rhs.run(scope)
     end
 end
 
@@ -68,8 +68,8 @@ class MultiplicationNode
         @rhs = b 
     end
 
-    def run()
-        @lhs.run * @rhs.run
+    def run(scope)
+        @lhs.run(scope) * @rhs.run(scope)
     end
 end
 
@@ -80,8 +80,8 @@ class DivisionNode
         @rhs = b 
     end
 
-    def run()
-        @lhs.run / @rhs.run
+    def run(scope)
+        @lhs.run(scope) / @rhs.run(scope)
     end
 end
 
@@ -92,8 +92,8 @@ class ModuloNode
         @rhs = b 
     end
 
-    def run()
-        @lhs.run % @rhs.run
+    def run(scope)
+        @lhs.run(scope) % @rhs.run(scope)
     end
 end
 
@@ -104,8 +104,8 @@ class PowerNode
         @rhs = b 
     end
 
-    def run()
-        @lhs.run ** @rhs.run
+    def run(scope)
+        @lhs.run(scope) ** @rhs.run(scope)
     end
 end
 
@@ -116,8 +116,8 @@ class EqualsNode
         @rhs = b 
     end
 
-    def run()
-        @lhs.run == @rhs.run
+    def run(scope)
+        @lhs.run(scope) == @rhs.run(scope)
     end
 end
 
@@ -128,8 +128,8 @@ class MoreEqualsNode
         @rhs = b 
     end
 
-    def run()
-        @lhs.run >= @rhs.run
+    def run(scope)
+        @lhs.run(scope) >= @rhs.run(scope)
     end
 end
 
@@ -140,8 +140,8 @@ class LessEqualsNode
         @rhs = b 
     end
 
-    def run()
-        @lhs.run <= @rhs.run
+    def run(scope)
+        @lhs.run(scope) <= @rhs.run(scope)
     end
 end
 
@@ -152,8 +152,8 @@ class MoreNode
         @rhs = b 
     end
 
-    def run()
-        @lhs.run > @rhs.run
+    def run(scope)
+        @lhs.run(scope) > @rhs.run(scope)
     end
 end
 
@@ -164,8 +164,8 @@ class LessNode
         @rhs = b 
     end
 
-    def run()
-        @lhs.run < @rhs.run
+    def run(scope)
+        @lhs.run(scope) < @rhs.run(scope)
     end
 end
 
@@ -176,8 +176,8 @@ class NotEqualsNode
         @rhs = b 
     end
 
-    def run()
-        @lhs.run != @rhs.run
+    def run(scope)
+        @lhs.run(scope) != @rhs.run(scope)
     end
 end
 
@@ -187,8 +187,8 @@ class PrintNode
         @print_expr = a
     end
 
-    def run()
-        @value = @print_expr.run
+    def run(scope)
+        @value = @print_expr.run(scope)
         puts @value
         @value #WEIRD maybe (puts)?
     end
@@ -200,8 +200,8 @@ class ConditionNode                   ##Man kanske borde göra om detta till en 
         @condition = a 
     end
     
-    def run()
-        @condition.run
+    def run(scope)
+        @condition.run(scope)
     end
 end
 
@@ -212,9 +212,9 @@ class BlockNode
         @statement = b 
     end
 
-    def run()
-        if @condition.run == true
-            @statement.run
+    def run(scope)
+        if @condition.run(scope) == true
+            @statement.run(scope)
         end
     end
 end
@@ -225,30 +225,49 @@ class StatementNode
         @statement = a
     end
     
-    def run()
-        @statement.run
+    def run(scope)
+        @statement.run(scope)
     end
 end
 
-class FunctionNode
-    def initialize(a, b)
-        @variables = a
-        @statement = b
-        
-    end
-    
-    def run()
-        puts("FUNCTION FOUND")
-    end
-end
-
-# class VariableNode
+# class FunctionNode
 #     def initialize(a, b)
+#         @variables = a
+#         @statement = b
+        
+#     end
+    
+#     def run()
+#         puts("FUNCTION FOUND")
+#     end
+# end
+
+class VariableNode
+    def initialize(a)
+        @name = a
+    end
+    
+    def run(scope)
+        scope.get_var(@name)
+    end
+end
+        
     
 
 
 
-# #class AssignNode ##IMPLEMENTERA
+class AssignNode
+    def initialize(a, b)
+        @name = a
+        @expr = b
+    end
+
+    def run(scope)
+        value = @expr.run(scope)
+        scope.set_var(@name, value)
+        value
+    end
+end
 
 # #class VariableNode ##implementera för att skilja på string och variabler.
 
