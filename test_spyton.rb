@@ -9,58 +9,58 @@ class TestSpyton < Test::Unit::TestCase
 
   def test_addition
     result = @spyton.parse("3 + 5")
-    assert_equal(8, result.run)
+    assert_equal(8, result.run(global_scope))
   end
 
   def test_subtraction
     result = @spyton.parse("10 - 6")
-    assert_equal(4, result.run)
+    assert_equal(4, result.run(global_scope))
   end
 
   def test_multiplication
     result = @spyton.parse("6 * 7")
-    assert_equal(42, result.run)
+    assert_equal(42, result.run(global_scope))
   end
 
   def test_division
     result = @spyton.parse("20 / 4")
-    assert_equal(5, result.run)
+    assert_equal(5, result.run(global_scope))
   end
 
   def test_modulo
     result = @spyton.parse("10 % 3")
-    assert_equal(1, result.run)
+    assert_equal(1, result.run(global_scope))
   end
 
   def test_power
     result = @spyton.parse("2 ^ 3")
-    assert_equal(8, result.run)
+    assert_equal(8, result.run(global_scope))
   end
 
   def test_boolean_equal
     result = @spyton.parse("5 == 5")
-    assert_equal(true, result.run)
+    assert_equal(true, result.run(global_scope))
   end
 
   def test_boolean_not_equal
     result = @spyton.parse("5 != 4")
-    assert_equal(true, result.run)
+    assert_equal(true, result.run(global_scope))
   end
 
   def test_boolean_greater
     result = @spyton.parse("10 > 5")
-    assert_equal(true, result.run)
+    assert_equal(true, result.run(global_scope))
   end
 
   def test_boolean_less
     result = @spyton.parse("3 < 5")
-    assert_equal(true, result.run)
+    assert_equal(true, result.run(global_scope))
   end
 
   def test_variable
     @spyton.parse("x = 10")
     result = @spyton.parse("x")
-    assert_equal(10, result.run)
+    assert_equal(10, result.run(global_scope))
   end
   
 
@@ -68,7 +68,7 @@ class TestSpyton < Test::Unit::TestCase
 
   def test_if_statement
     result = @spyton.parse("if (1 > 0) { print(1) }")
-    output = capture_stdout { result.run }
+    output = capture_stdout { result.run(global_scope) }
     assert_equal("1\n", output)
   end
 
@@ -84,13 +84,13 @@ class TestSpyton < Test::Unit::TestCase
 
   def test_variable
     result =@spyton.parse("x = 5")
-    assert_equal(5, result.run)
+    assert_equal(5, result.run(global_scope))
   end
 
   def test_variable2
     result =@spyton.parse("x = 10")
     result = @spyton.parse("x")
-    assert_equal(10, result.run)
+    assert_equal(10, result.run(global_scope))
   end
          
 
