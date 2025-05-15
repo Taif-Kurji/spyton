@@ -74,12 +74,10 @@ class TestSpyton < Test::Unit::TestCase
 
 
 
-  #def test_if_statement
-  #  result = parse("if (1 > 0) { }")
-  #  output = capture_stdout { result }
-  #  assert_equal("1\n", output)
-  #end
-# fixar sen enkel fix expect true  men allt annat funkar
+  def test_if_statement
+    result = parse("om (1 > 0) {5}")
+    assert_equal(5, result)
+  end
 
   def capture_stdout
     original_stdout = $stdout
