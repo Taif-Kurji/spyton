@@ -56,6 +56,7 @@ class Spyton
       end
 
       rule :statement_list do
+        match(:statement_list, ';', :block) { |a, _, b| StatementListNode.new(a, b) }
         match(:statement_list, ';', :statement) { |a, _, b| StatementListNode.new(a, b) }
         match(:statement)
       end
