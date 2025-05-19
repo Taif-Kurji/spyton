@@ -1,2 +1,4 @@
-x = 5
-x + 2
+x=1
+skriv(x)
+y=2
+skriv(y)

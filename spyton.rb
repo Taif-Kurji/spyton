@@ -26,9 +26,9 @@ class Spyton
     @@variables = {}
     @diceParser = Parser.new("dice roller") do
       token(/\s+/)
-      token(/[a-zA-Z]+/) {|m| m}
       token(/skriv/) {|m| m}
       token(/om/) {|m| m}
+      token(/[a-zA-Z]+/) {|m| m}
       token(/==/) {|m| m}
       token(/=/) {|m| m}
       token(/<=/) {|m| m}
@@ -56,8 +56,8 @@ class Spyton
       rule :statement do
         match(:assign)
         match(:bool)
-        match(:expr)
         match(:print)
+        match(:expr)
       end
 
       rule :print do

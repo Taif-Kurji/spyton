@@ -261,19 +261,19 @@ class FunctionNode
         @args = c
     end
 
-    def run(scope)
-        scope.set_func(@name, self)
-    end
+    # def run(scope)
+    #     scope.set_func(@name, self) WTF ÄR DET HÄR
+    # end
 
-    def call(arg_values, calling_scope)
-        func_scope = Scope.new(calling_scope)
+    # def call(arg_values, calling_scope)
+    #     func_scope = Scope.new(calling_scope) WTF ÄR DET HÄR
     
-        @args.each_with_index do |arg_name, i|
-          func_scope.set_var(arg_name, arg_values[i])
-        end
+    #     @args.each_with_index do |arg_name, i|
+    #       func_scope.set_var(arg_name, arg_values[i])
+    #     end
     
-        @body.run(func_scope)
-    end
+    #     @body.run(func_scope)
+    # end
 end
 
 
@@ -285,8 +285,8 @@ class FunctionCallNode
   
     def run(scope)
       func = scope.get_func(@name)
-      arg_values = @args.map { |arg| arg.run(scope) }
-      func.call(arg_values, scope)
+      #arg_values = @args.map { |arg| arg.run(scope) }
+      #func.call(arg_values, scope)
     end
   end      
     
