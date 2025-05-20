@@ -254,13 +254,14 @@ class VariableNode
 end
 
 
-class FunctionNode
-    def initialize(a, b, c)
-        @name = a
-        @body = b
-        @args = c
-    end
+# class FunctionNode
+#     def initialize(a, b, c)
+#         @name = a
+#         @body = b
+#         @args = c
+#     end
 
+<<<<<<< HEAD
     # def run(scope)
     #     scope.set_func(@name, self) WTF ÄR DET HÄR
     # end
@@ -289,6 +290,11 @@ class FunctionCallNode
       #func.call(arg_values, scope)
     end
   end      
+=======
+#     def run(scope)
+#         scope.set_func
+        
+>>>>>>> edbc1f363079a3d0758667cede2281d4da8a4e93
     
 
 
@@ -306,6 +312,18 @@ class AssignNode
         value
     end
 end
+
+class StatementListNode
+    def initialize(a, b)
+      @first = a
+      @second = b
+    end
+  
+    def run(scope)
+      @first.run(scope)
+      @second.run(scope)
+    end
+  end
 
 # #class VariableNode ##implementera för att skilja på string och variabler.
 

@@ -9,6 +9,7 @@ require './scope_class.rb'
 
 
 
+
 ##############################################################################
 #                                                                            #
 # This part defines the Spyton language                                      # 
@@ -34,22 +35,31 @@ class Spyton
       token(/<=/) {|m| m}
       token(/>=/) {|m| m}
       token(/!=/) {|m| m}
+      token(/funktion/) { |m| m }
       token(/\d+/) {|m| m.to_i }
       token(/./) {|m| m }
-      
+      token(/funktion/) { |m| m }
       # start :program do
       #   match(:block)
       # end
 
       start :block do
-        match(:condition, '{', :statement, '}' ) {|a, _, b, _| BlockNode.new(a, b)} 
-        match(:statement) {|a| StatementNode.new(a)} #LÄGG TILL PARANTESER SOM UTFÖRS FÖRE ANNAT.
+        # match(:condition, '{', :statement, '}' ) {|a, _, b, _| BlockNode.new(a, b)} 
+        # match(:statement) {|a| StatementNode.new(a)} #LÄGG TILL PARANTESER SOM UTFÖRS FÖRE ANNAT.
+        match(:condition, '{', :statement_list, '}') { |a, _, b, _| BlockNode.new(a, b) }
+        match(:statement_list) { |a| StatementNode.new(a) }
       end
 
       rule :condition do
         match('om', '(', :bool, ')') {|_, _, a, _| ConditionNode.new(a)}
         #match('while', '(', :bool, ')') {|_, _, a, _| a} #FIXA DETTA (adda boolen till nuvarande scopes conditions.)
         # match('for', :bool)
+      end
+
+      rule :statement_list do
+        match(:statement_list, ';', :block) { |a, _, b| StatementListNode.new(a, b) }
+        match(:statement_list, ';', :statement) { |a, _, b| StatementListNode.new(a, b) }
+        match(:statement)
       end
       
       
