@@ -77,7 +77,7 @@ class Spyton
       rule :assign do
         #match(String, '=', :expr) {|a,_,b| @@variables[a] = b } #NODE
         #match(String, '=', :bool) {|a,_,b| @@variables[a] = b } ##TA BORT !!
-        match(String, '=', :expr) {|a,_,b| AssignNode.new(a, b) } #NODE
+        match(String, '=', :expr) {|a,_,b| AssignNode.new(a, b) }
         match(String, '=', :bool) {|a,_,b| AssignNode.new(a, b) } ##TA BORT !!
 
         # match('funktion', String, '(', String, ')', '{', :statement, '}') {|_, a, _, b, _, _, c, _| FunctionNode.new(b, c) }  
