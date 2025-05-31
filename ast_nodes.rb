@@ -248,11 +248,11 @@ class IfElseChainNode
     end
   
     def run(scope)
-      if @condition.run(scope)
-        @then_block.run(scope)
-      elsif @else_part
-        @else_part.run(scope)
-      end
+        if @condition.run(scope)
+            @then_block.run(scope)
+        elsif @else_part 
+            @else_part.run(scope)
+        end
     end
 end
   
