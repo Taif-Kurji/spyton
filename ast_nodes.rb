@@ -1,10 +1,3 @@
-# class Node
-#     def initialize()
-#         Node* @lhs 
-#         Node* @rhs
-#     end 
-# end
-
 class IntegerNode
     def initialize(i)
         @num = i 
@@ -35,9 +28,6 @@ class AdditionNode
 
     def run(scope)
         @lhs.run(scope) + @rhs.run(scope)
-        # lhs_value = @lhs.run(scope)
-        # rhs_value = @rhs.run(scope)
-        # lhs_value + rhs_value
     end
 end
 
@@ -226,12 +216,6 @@ class BlockNode
         @statement = b 
     end
 
-    # def run(scope)
-    #     if @condition.run(scope) == true
-    #         @statement.run(scope)
-    #     end
-    # end
-
     def run(scope)
         if @condition.is_a?(ConditionNode)
             if @condition.run(scope)
@@ -260,7 +244,7 @@ class IfElseChainNode
     def initialize(condition, then_block, else_part)
       @condition = condition
       @then_block = then_block
-      @else_part = else_part # kan vara IfElseChainNode, ElseNode, eller nil
+      @else_part = else_part
     end
   
     def run(scope)
@@ -288,7 +272,6 @@ class VariableNode
     end
     
     def run(scope)
-        #puts("Tar '#{@name}'")
         scope.get_var(@name.strip)
     end
 end
@@ -304,8 +287,7 @@ class AssignNode
 
     def run(scope)
         value = @expr.run(scope)
-        #puts("Sätter '#{@name}' = #{value}")
-        scope.set_var(@name, value) #TAR BORT whitespace 
+        scope.set_var(@name, value)
         value
     end
 end
@@ -379,46 +361,10 @@ class ForNode
     end
 end
 
-
-# class FunctionDefNode
-#     def initialize(name, args, body)
-#         @name = name.to_s
-#         @args = args.to_s
-#         @body = body
-#     end
-
-#     def run(scope)
-#         scope.set_func(@name, self)
-#         @name
-#     end
-# end
-
-# class FunctionCallNode
-#     def initialize(name, arg_expr)
-#         @name = name.to_s
-#         @arg_expr = arg_expr
-#     end
-
-#     def run(scope)
-#         func = scope.get_func(@name)
-#         arg_val = @arg_expr.run(scope)
-
-#         new_scope = Scope.new
-#         new_scope.set_var(func.instance_variable_get(:@param), arg_val)
-
-#         func.instance_variable_get(:@body).run(new_scope)
-#     end
-# end
-
-
-
-
 class FunctionDefNode
     attr_reader :params, :body
 
     def initialize(name, params, body)
-        #raise "params måste avra en array" unless params.is_a?(Array)
-
         @name = name.to_s
         @params = params
         @body = body
@@ -431,7 +377,13 @@ class FunctionDefNode
                 inner_scope.set_var(param, arg_node.run(scope))
             end 
         end
-        @body.run(inner_scope)
+        # @body.run(inner_scope)
+        begin
+            @body.run(inner_scope)
+            nil
+        rescue ReturnException => e
+            e.value
+        end
     end
 
     
@@ -446,8 +398,6 @@ end
 
 class FunctionCallNode
     def initialize(name, args)
-        #raise "args måste avra en array" unless args.is_a?(Array)
-
         @name = name.to_s
         @args = args
     end
@@ -460,11 +410,20 @@ end
 
 class ReturnNode
     def initialize(in_statement)
-
         @statement = in_statement
     end
 
     def run(scope)
+        value = @statement.run(scope)
+        raise ReturnException.new(value)
+    end
+end
+
+class ReturnException < StandardError
+    attr_reader :value
+
+    def initialize(value)
+        @value = value
     end
 end
 

@@ -1,7 +1,6 @@
 funktion hej(x)
 {
-  x = x + 1.3;
-  skriv(x)
+  returnera(5+2.2+x)
 };
 
-bruka hej(2)
+skriv(bruka hej(5))

@@ -112,24 +112,6 @@ class Spyton
         match(:expr)
       end
 
-      # rule :function_def do
-      #   match('funktion', String, '(', :identifier_list, ')', '{', :statement_list, '}') do |_,name,_,params,_ ,_ ,body,_|
-      #     raise "params är inte array: #{params.inspect}" unless params.is_a?(Array)
-      #     FunctionDefNode.new(name, params, body)
-      #   end
-      # end
-
-      # rule :function_call do
-      #   match('bruka', :identifier, '(', :arg_list, ')') do |_, name, _, args, _|
-      #     FunctionCallNode.new(name, args)
-      #   end
-      # end
-
-      # rule :identifier_list do
-      #   match(:identifier_list, ',', :identifier) { |list, _, id| list + [id]}
-      #   match(String) {|id| id}
-      # end
-
       rule :arg_list do
          match(:arg_list, ',', :expr) {|list, _, a| list + [a]}
          match(:expr) {|a| [a]}
@@ -187,7 +169,7 @@ class Spyton
         match('(', :expr, ')') { |_, a, _| ExpressionNode.new(a) }
         match(Float) { |a| FloatNode.new(a) }
         match(Integer) { |a| IntegerNode.new(a) }
-        match('bruka', String, '(', ')') {|_, a, _, _| FunctionCallNode.new(a,)}
+        match('bruka', String, '(', ')') {|_, a, _, _| FunctionCallNode.new(a, nil)}
         match('bruka', String, '(', :arg_list, ')') {|_, a, _, b, _| FunctionCallNode.new(a, b)}
         match('returnera', '(', :statement, ')' ) {|_, _, a, _| ReturnNode.new(a)}
         match(String) do |a|
