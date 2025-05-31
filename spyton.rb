@@ -16,12 +16,7 @@ require './scope_class.rb'
 #                                                                            #   
 ##############################################################################
 
-class Spyton
-        
-  # def Spyton.program(times, sides)
-  #   (1..times).inject(0) {|sum, _| sum + rand(sides) + 1 }
-  # end
-  
+class Spyton 
   def initialize
     @@functions = {}
     @@variables = {}
@@ -57,7 +52,6 @@ class Spyton
       end
 
       rule :block do
-        #match(:loop_block) { |a| a }
         match(:if_chain) { |a| a }
         match(:statement_list) { |a| StatementNode.new(a) }
       end
@@ -174,7 +168,7 @@ class Spyton
         match('returnera', '(', :statement, ')' ) {|_, _, a, _| ReturnNode.new(a)}
         match(String) do |a|
           if a.start_with?('"') && a.end_with?('"')
-            StringNode.new(a[1..-2])  # ta bort citationstecken
+            StringNode.new(a[1..-2])
           else
             VariableNode.new(a)
           end
@@ -201,9 +195,6 @@ class Spyton
   def program_from_string(code)
     global_scope = Scope.new
     root_node = @diceParser.parse(code)
-    # result = root_node.run(global_scope)
-    # puts "=> #{result}" unless result.nil?
-    #puts "Root node: #{root_node.class}"
     root_node.run(global_scope)
   end
 
@@ -224,7 +215,7 @@ if ARGV.length > 0 && ARGV[0].end_with?(".sp")
   code = File.read(ARGV[0])
   spyton.program_from_string(code)
 else
-  spyton.program  # interaktivt läge
+  spyton.program 
 end
 
 

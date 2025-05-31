@@ -377,7 +377,7 @@ class FunctionDefNode
                 inner_scope.set_var(param, arg_node.run(scope))
             end 
         end
-        # @body.run(inner_scope)
+        
         begin
             @body.run(inner_scope)
             nil
