@@ -379,8 +379,8 @@ class FunctionDefNode
         end
         
         begin
-            @body.run(inner_scope)
-            nil
+            result= @body.run(inner_scope)
+            result
         rescue ReturnException => e
             e.value
         end

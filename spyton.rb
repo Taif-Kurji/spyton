@@ -12,11 +12,11 @@ require './scope_class.rb'
 
 ##############################################################################
 #                                                                            #
-# This part defines the Spyton language                                      # 
-#                                                                            #   
+# This part defines the Spyton language                                      #
+#                                                                            #
 ##############################################################################
 
-class Spyton 
+class Spyton
   def initialize
     @@functions = {}
     @@variables = {}
@@ -41,11 +41,23 @@ class Spyton
       token(/\{/) { |m| m }
       token(/\}/) { |m| m }
 
+      token(/\(/) { |m| m }
+      token(/\)/) { |m| m }
+      token(/;/) { |m| m }
+      token(/,/) { |m| m }
+      token(/\*/) { |m| m } 
+      token(/\//) { |m| m }
+      token(/%/) { |m| m }
+      token(/\+/) { |m| m }
+      token(/-/) { |m| m }
+      token(/\^/) { |m| m }
+
+
       token(/\d+\.\d+/) { |m| m.to_f }
       token(/\d+/) { |m| m.to_i }
       token(/[a-zA-Z_]\w*/) { |m| m }
 
-      token(/./) { |m| m }                     
+
 
       start :program do
         match(:block) { |b| b }
@@ -59,8 +71,8 @@ class Spyton
       rule :condition do
         match('om', '(', :bool, ')') {|_, _, cond, _| ConditionNode.new(cond)}
         match('medans', '(', :bool, ')') { |_, _, cond, _| WhileConditionNode.new(cond) }
-        match('för', '(', :assign, ';', :bool, ';', :assign, ')') do |_, _, init, _, cond, _, step, _| 
-          ForHeaderNode.new(init, cond, step) 
+        match('för', '(', :assign, ';', :bool, ';', :assign, ')') do |_, _, init, _, cond, _, step, _|
+          ForHeaderNode.new(init, cond, step)
         end
       end
 
@@ -68,21 +80,20 @@ class Spyton
         match(:condition, '{', :statement_list, '}', :else_if_chain) do |cond, _, if_block, _, else_part|
           IfElseChainNode.new(cond, if_block, else_part)
         end
-      
+
         match(:condition, '{', :statement_list, '}') do |cond, _, if_block, _|
           BlockNode.new(cond, if_block)
         end
       end
+
+      
       
       rule :loop_block do
-        match(:condition, '{', :statement_list, '}') do |cond, _, body, _|
-          if cond.is_a?(WhileConditionNode)
-            WhileNode.new(cond.condition, body)
-          elsif cond.is_a?(ForHeaderNode)
-            ForNode.new(cond.init, cond.condition, cond.step, body)
-          else
-            BlockNode.new(cond, body)
-          end
+        match('medans', '(', :bool, ')', '{', :statement_list, '}') do |_, _, cond, _, _, body, _|
+          WhileNode.new(cond, body)
+        end
+        match('för', '(', :assign, ';', :bool, ';', :assign, ')', '{', :statement_list, '}') do |_, _, init, _, cond, _, step, _, _, body, _|
+          ForNode.new(init, cond, step, body)
         end
       end
 
@@ -103,7 +114,8 @@ class Spyton
         match(:assign)
         match(:bool)
         match(:print)
-        match(:loop_block)
+        match(:if_chain) 
+        match(:loop_block) 
         match(:expr)
       end
 
@@ -128,7 +140,7 @@ class Spyton
         match('funktion', String, '(', ')', '{', :statement_list, '}') {|_, name, _, _, _, body, _| FunctionDefNode.new(name, nil, body) }
         match('funktion', String, '(', :param_list,  ')', '{', :statement_list, '}') {|_, name, _, params, _, _, body, _| FunctionDefNode.new(name, params, body) }
       end
-      
+
       rule :bool do
         match(:expr, '==', :term) {|a, _, b| EqualsNode.new(a, b) }
         match(:expr, '>', :term) {|a, _, b| MoreNode.new(a, b) }
@@ -139,21 +151,21 @@ class Spyton
       end
 
 
-      rule :expr do 
+      rule :expr do
         match(:expr, '+', :term) {|a, _, b| AdditionNode.new(a, b) }
         match(:expr, '-', :term) {|a, _, b| SubtractionNode.new(a, b) }
 
         match(:term)
       end
-      
-      rule :term do 
+
+      rule :term do
         match(:term, '*', :next) {|a, _, b| MultiplicationNode.new(a, b) }
         match(:term, '/', :next) {|a, _, b| DivisionNode.new(a, b) }
         match(:term, '%', :next) {|a, _, b| ModuloNode.new(a, b) }
-        
+
         match(:next)
       end
-      
+
       rule :next do
         match(:next, '^', :atom) {|a, _, b| PowerNode.new(a, b) }
         match(:atom)
@@ -174,14 +186,14 @@ class Spyton
             VariableNode.new(a)
           end
         end
-      end     
+      end
     end
   end
-  
+
   def done(str)
     ["quit","exit","bye","done",""].include?(str.chomp)
   end
-  
+
   def program
     global_scope = Scope.new
     loop do
@@ -216,7 +228,5 @@ if ARGV.length > 0 && ARGV[0].end_with?(".sp")
   code = File.read(ARGV[0])
   spyton.program_from_string(code)
 else
-  spyton.program 
+  spyton.program
 end
-
-
