@@ -7,7 +7,7 @@ class Parser
     end
   
     def initialize(language_name, &block)
-      @logger = Logger.new(STDOUT)
+      @logger = Logger.new(nil)
       @lex_tokens = []
       @rules = {}
       @start = nil
