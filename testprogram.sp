@@ -1,20 +1,11 @@
-x = 3;
+x = 2;
 
-om(x == 3) {
-  skriv(2)
-}
-annars {
-  skriv(99)
-};
-
-
-om(x == 1) {
-  skriv(2)
-}
-annars om (x==5) {
-  skriv(5)
+om (x == 3)
+{
+  skriv("tre")
 }
 
-annars {
-  skriv("s")
+annars om (x==2)
+{
+  skriv("två")
 }
