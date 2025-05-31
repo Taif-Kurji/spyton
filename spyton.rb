@@ -46,6 +46,7 @@ class Spyton
       token(/\{/) { |m| m }
       token(/\}/) { |m| m }
 
+      token(/\d+\.\d+/) { |m| m.to_f }
       token(/\d+/) { |m| m.to_i }
       token(/[a-zA-Z_]\w*/) { |m| m }
 
@@ -62,7 +63,7 @@ class Spyton
       end
 
       rule :condition do
-        match('om', '(', :bool, ')') {|_, _, a, _| ConditionNode.new(a)}
+        match('om', '(', :bool, ')') {|_, _, cond, _| ConditionNode.new(cond)}
         match('medans', '(', :bool, ')') { |_, _, cond, _| WhileConditionNode.new(cond) }
         match('för', '(', :assign, ';', :bool, ';', :assign, ')') do |_, _, init, _, cond, _, step, _| 
           ForHeaderNode.new(init, cond, step) 
@@ -147,8 +148,8 @@ class Spyton
       rule :assign do
         match(String, '=', :expr) {|a,_,b| AssignNode.new(a, b) }
         match(String, '=', :bool) {|a,_,b| AssignNode.new(a, b) }
-        match('funktion', String, '(', ')', '{', :statement_list, '}') {|_, a, _, _, _, c, _| FunctionDefNode.new(a, nil, c) }
-        match('funktion', String, '(', :param_list,  ')', '{', :statement_list, '}') {|_, a, _, b, _, _, c, _| FunctionDefNode.new(a, b, c) }
+        match('funktion', String, '(', ')', '{', :statement_list, '}') {|_, name, _, _, _, body, _| FunctionDefNode.new(name, nil, body) }
+        match('funktion', String, '(', :param_list,  ')', '{', :statement_list, '}') {|_, name, _, params, _, _, body, _| FunctionDefNode.new(name, params, body) }
       end
       
       rule :bool do
@@ -158,12 +159,11 @@ class Spyton
         match(:expr, '<', :term) {|a, _, b| LessNode.new(a, b)}
         match(:expr, '<=', :term) {|a, _, b| LessEqualsNode.new(a, b)}
         match(:expr, '!=', :term) {|a, _, b| NotEqualsNode.new(a, b)}
-
       end
 
 
       rule :expr do 
-        match(:expr, '+', :term) {|a, _, b| AdditionNode.new(a, b) } #STÄMMER DETTA???
+        match(:expr, '+', :term) {|a, _, b| AdditionNode.new(a, b) }
         match(:expr, '-', :term) {|a, _, b| SubtractionNode.new(a, b) }
 
         match(:term)
@@ -185,6 +185,7 @@ class Spyton
 
       rule :atom do
         match('(', :expr, ')') { |_, a, _| ExpressionNode.new(a) }
+        match(Float) { |a| FloatNode.new(a) }
         match(Integer) { |a| IntegerNode.new(a) }
         match('bruka', String, '(', ')') {|_, a, _, _| FunctionCallNode.new(a,)}
         match('bruka', String, '(', :arg_list, ')') {|_, a, _, b, _| FunctionCallNode.new(a, b)}

@@ -15,6 +15,17 @@ class IntegerNode
     end
 end
 
+class FloatNode
+    def initialize(i)
+        @value = i
+    end
+
+    def run(scope)
+        @value
+    end
+end
+
+
 
 class AdditionNode
     def initialize(a, b)
@@ -24,6 +35,9 @@ class AdditionNode
 
     def run(scope)
         @lhs.run(scope) + @rhs.run(scope)
+        # lhs_value = @lhs.run(scope)
+        # rhs_value = @rhs.run(scope)
+        # lhs_value + rhs_value
     end
 end
 

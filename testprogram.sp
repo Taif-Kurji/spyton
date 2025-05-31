@@ -1,6 +1,6 @@
 funktion hej(x)
 {
-  x = x + 1;
+  x = x + 1.3;
   skriv(x)
 };
 
