@@ -92,28 +92,15 @@ end
 
 class ModuloNode
     def initialize(a, b)
-        @lhs = a
-        @rhs = b
+        @lhs = a 
+        @rhs = b 
     end
 
     def run(scope)
-        val_a = @lhs.run(scope)
-        val_b = @rhs.run(scope)
-
-        if val_b == 0
-          raise ZeroDivisionError, "Modulo på noll"
-        end
-
-        
-        remainder = val_a % val_b
-
-
-        if remainder < 0
-          remainder += val_b.abs
-        end
-        return remainder
+        @lhs.run(scope) % @rhs.run(scope)
     end
 end
+
 
 class PowerNode
     def initialize(a, b)
