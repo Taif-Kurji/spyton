@@ -131,7 +131,7 @@ class Spyton
 
 
       rule :print do
-        match('skriv', '(', :expr, ')') {|_, _, a, _| PrintNode.new(a) } #WEIRD
+        match('skriv', '(', :expr, ')') {|_, _, a, _| PrintNode.new(a) } 
       end
 
       rule :assign do
@@ -176,6 +176,7 @@ class Spyton
         match('(', :expr, ')') { |_, a, _| ExpressionNode.new(a) }
         match(Float) { |a| FloatNode.new(a) }
         match(Integer) { |a| IntegerNode.new(a) }
+        match('-', :atom) { |_, a| MultiplicationNode.new(IntegerNode.new(-1), a) }
         match('bruka', String, '(', ')') {|_, a, _, _| FunctionCallNode.new(a, nil)}
         match('bruka', String, '(', :arg_list, ')') {|_, a, _, b, _| FunctionCallNode.new(a, b)}
         match('returnera', '(', :statement, ')' ) {|_, _, a, _| ReturnNode.new(a)}

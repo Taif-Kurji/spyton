@@ -149,7 +149,6 @@ class TestSpyton < Test::Unit::TestCase
 
 
 
-
   def test_print
     output = capture_stdout do
       parse("skriv(42)")
@@ -262,5 +261,86 @@ class TestSpyton < Test::Unit::TestCase
     parse("bruka test()")
     assert_raise(RuntimeError) { parse("x") }
   end
+  def test_negative_int
+    result = parse("-5")
+    assert_equal(-5, result)
+  end
 
+  def test_negative_float
+    result = parse("-3.14")
+    assert_equal(-3.14, result)
+  end
+
+  def test_addition_negative
+    result = parse("10 + -5")
+    assert_equal(5, result)
+  end
+
+  def test_subtraction_negative
+    result = parse("5 - -3")
+    assert_equal(8, result)
+  end
+
+  def test_multiplication_negative
+    result = parse("-4 * 5")
+    assert_equal(-20, result)
+  end
+
+  def test_division_negative
+    result = parse("20 / -4")
+    assert_equal(-5, result)
+  end
+
+  def test_modulo_negative
+    result = parse("10 % -3")
+    assert_equal(1, result)
+  end
+
+  def test_power_with_negative_base
+    result = parse("-2 ^ 3")
+    assert_equal(-8, result)
+  end
+
+  def test_power_with_negative_exp
+   
+    result = parse("2 ^ -3")
+    assert_equal(0.125, result)
+  end
+
+  def test_boolean_equal_negative
+    result = parse("-5 == -5")
+    assert_equal(true, result)
+  end
+
+  def test_boolean_not_equal_negative
+    result = parse("-5 != -4")
+    assert_equal(true, result)
+  end
+
+  def test_boolean_greater_negative
+    result = parse("-3 > -5")
+    assert_equal(true, result)
+  end
+
+  def test_boolean_less_negative
+    result = parse("-5 < -3")
+    assert_equal(true, result)
+  end
+
+  def test_complex_with_negatives
+    result = parse("(-10 + 2) * -3 / 4")
+    assert_equal(6, result)
+  end
+
+  def test_variable_assignment_neg
+    parse("neg_val = -15")
+    result = parse("neg_val")
+    assert_equal(-15, result)
+  end
+
+  def test_function_with_negative_args
+    parse("funktion subtract_neg(a, b) {a - b}")
+    result = parse("bruka subtract_neg(-10, -5)")
+    assert_equal(-5, result)
+  end
 end
