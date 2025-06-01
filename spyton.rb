@@ -71,9 +71,6 @@ class Spyton
       rule :condition do
         match('om', '(', :bool, ')') {|_, _, cond, _| ConditionNode.new(cond)}
         match('medans', '(', :bool, ')') { |_, _, cond, _| WhileConditionNode.new(cond) }
-        match('för', '(', :assign, ';', :bool, ';', :assign, ')') do |_, _, init, _, cond, _, step, _|
-          ForHeaderNode.new(init, cond, step)
-        end
       end
 
       rule :if_chain do
@@ -114,8 +111,9 @@ class Spyton
         match(:assign)
         match(:bool)
         match(:print)
-        match(:if_chain) 
         match(:loop_block) 
+        match(:if_chain) 
+       
         match(:expr)
       end
 

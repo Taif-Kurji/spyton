@@ -1,7 +1,6 @@
-x=5;
-om(x==0)
-{ skriv("X är lika med 0") }
-annars om (x==3)
-{ skriv("X är lika med 3") }
-annars
-{ skriv(x) }
+
+för (x = 0; x < 5; x = x + 1) {
+    skriv("x är: ");
+    skriv(x)
+};
+skriv("Loopen är avslutad.")
